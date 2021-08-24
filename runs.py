@@ -6,8 +6,8 @@ pile = []
 decks = []
 colors = ["r", "b", "k", "o"]
 numbers = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13"]
-tim = ['r2', 'r2', 'r3', 'r4', 'r4', 'r5', 'r5', 'r6', 'r7', 'r7', 'r8', 'r8', 'r9', 'r10', 'r11', 'r12', 'r12', 'r13', 'b2', 'b3', 'b4', 'b4', 'b5', 'b5', 'b6', 'b8', 'b8', 'b9', 'b9', 'b10', 'b11', 'b11', 'b12', 'b12', 'b13', 'b13', 'k1', 'k2', 'k3', 'k3', 'k4', 'k4', 'k5', 'k5', 'k6', 'k7', 'k9', 'k9', 'k10', 'k10', 'k11', 'k11', 'k12', 'k12', 'k13', 'o1', 'o2', 'o2', 'o3', 'o3', 'o4', 'o4', 'o5', 'o5', 'o6', 'o7', 'o7', 'o8', 'o8', 'o9', 'o10', 'o10', 'o11', 'o12', 'o13']
-
+tim = ['r1', 'r2', 'r2', 'r3', 'r4', 'r4', 'r5', 'r5', 'r6', 'r7', 'r7', 'r8', 'r8', 'r9', 'r10', 'r11', 'r12', 'r12', 'r13', 'b1', 'b2', 'b3', 'b4', 'b4', 'b5', 'b5', 'b6', 'b8', 'b8', 'b9', 'b9', 'b10', 'b11', 'b11', 'b12', 'b12', 'b13', 'b13', 'k1', 'k1', 'k2', 'k3', 'k3', 'k4', 'k4', 'k5', 'k5', 'k6', 'k7', 'k9', 'k9', 'k10', 'k10', 'k11', 'k11', 'k12', 'k12', 'k13', 'o1', 'o1', 'o2', 'o2', 'o3', 'o3', 'o4', 'o4', 'o5', 'o5', 'o6', 'o7', 'o7', 'o8', 'o8', 'o10', 'o10', 'o11', 'o12', 'o13']
+solutions = []
 
 straights = []
 flushes = []
@@ -54,8 +54,9 @@ def make_all_combos():
         all_combos.append(i)
 
 def solve(tiles, runs):
+    #print(len(tiles))
     if len(tiles) == 0:
-        print(runs)
+        solutions.append(runs)
     for combo in all_combos:
         to_rem = []
         for tile in combo:
@@ -126,6 +127,6 @@ for c in colors:
         labels.append(temp)
 
 root.mainloop()
-decks = tim
+decks = tim.copy()
 print(decks)
 solve(decks, [])
