@@ -62,15 +62,13 @@ make_flushes()
 make_all_combos()
 
 def generate_possible_board(tiles, runs):
+    global bthT
     run_hash = board_to_hash(runs)
     if(run_hash in hashes):
         return 0
-
     hashes[run_hash] = runs
-
     if(len(tiles) < 3):
         return 0
-
     for combo in all_combos:
         match = 0
         l = len(combo)
@@ -80,19 +78,20 @@ def generate_possible_board(tiles, runs):
             else:
                 break
         if match == l:
+            bthi0 = time.time()
             newRuns = runs.copy()
             newRuns.append(combo)
             newTiles = remove_tiles(tiles.copy(), combo)
+            bthT = bthT + (time.time() - bthi0)
             generate_possible_board(newTiles, newRuns)
 
 def board_to_hash(board):
     global bthT
-    bthi0 = time.time()
+
     chips = []
     for run in board:
         for chip in run:
             chips.append(chip)
-    bthT = bthT + (time.time() - bthi0)
     ret = ""
     for chip in sorted(chips):
         ret = ret + chip
@@ -101,7 +100,7 @@ def board_to_hash(board):
 
 
 t0 = time.time()
-generate_possible_board(pile[0:1*int(len(pile)/4)], [])
+generate_possible_board(pile[0:3*int(len(pile)/7)], [])
 print(len(hashes))
 t1 = time.time()
 print(t1-t0, bthT)
@@ -110,3 +109,4 @@ while(True):
 
 
 #check % of time certain functions are running and then nuke them or time them
+#remove tiles takes 10% and board to hash takes 25%
