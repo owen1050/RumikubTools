@@ -17,7 +17,7 @@ def make_pile():
     for c in colors:
         for n in numbers:
             pile.append(c+n)
-            pile.append(c+n)
+            #pile.append(c+n)
     print("made pile")
 
 def make_straights():
@@ -98,15 +98,16 @@ def board_to_hash(board):
 
     return ret
 
-
 t0 = time.time()
-generate_possible_board(pile[0:3*int(len(pile)/7)], [])
-print(len(hashes))
+#generate_possible_board(pile[0:2*int(len(pile)/7)], [])
+#print(len(hashes))
 t1 = time.time()
 print(t1-t0, bthT)
-while(True):
+while(False):
     time.sleep(1)
-
-
-#check % of time certain functions are running and then nuke them or time them
+i = 0
+for c in all_combos:
+    print(c, i)
+    i = i + 1
+#iheck % of time certain functions are running and then nuke them or time them
 #remove tiles takes 10% and board to hash takes 25%
