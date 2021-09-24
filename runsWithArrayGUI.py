@@ -114,15 +114,64 @@ def action(i):
         labels[i].configure(highlightbackground="red")
         chips[chipsI] = chips[chipsI] - 1
     print(chips)
+    print(isSolutionPossible())
+
+def isSolutionPossible():
+    global labels, chips, outText
+    possAll = True
+    for i in range(len(chips)):
+        if chips[i] != 0:
+            possThis = False
+            num = i % 13
+            checks = []
+            if num == 0:
+                checks.append([1,2])
+            elif num == 1:
+                checks.append([-1,1])
+                checks.append([1,2])
+            elif num == 11:
+                 checks.append([-1,1])
+                 checks.append([-1,-2])
+            elif num == 12:
+                checks.append([-1,-2])
+            else:
+                checks.append([-1,-2])
+                checks.append([-1,1])
+                checks.append([1,2])
+
+            for check in checks:
+                if chips[check[0]+i] > 0 and chips[check[1]+i] > 0:
+                    possThis = True
+
+            checks = [num, num + 13, num + 26, num + 39]
+            count = 0
+            for check in checks:
+                if(chips[check] > 0):
+                    count = count + 1
+            if count > 2:
+                possThis = True
+
+            if(possThis == False):
+                possAll = False
+                break
+    return possAll
+
 
 def updateSolution():
     global labels, chips, outText
     outText.delete('1.0', tk.END)
-    outText.insert(tk.INSERT, "thinking.....")
-    sol = solveDeck([], chips)
-    out = translateDeck(sol)
-    outText.delete('1.0', tk.END)
-    outText.insert(tk.INSERT, out)
+    isPos = isSolutionPossible()
+    if(isPos):
+        text = "Solution possible... now thinking"
+    else:
+        text = "solution impossible"
+    outText.insert(tk.INSERT, text)
+    time.sleep(0.1)
+    if(isPos):
+        sol = solveDeck([], chips)
+        out = translateDeck(sol)
+        outText.delete('1.0', tk.END)
+        outText.insert(tk.INSERT, out)
 
 colors_text = ["bl", "bk", "or", "re"]
 numbers_text = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13"]
