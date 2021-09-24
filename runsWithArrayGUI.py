@@ -83,6 +83,8 @@ def solveDeck(hands, deck):
             break
     if isEmpty:
         return hands
+    if isSolutionPossible(deck) == False:
+        return 0
     for combo in all_combos:
         if isHandInDeck(combo, deck):
             newHands = hands.copy()
@@ -114,13 +116,12 @@ def action(i):
         labels[i].configure(highlightbackground="red")
         chips[chipsI] = chips[chipsI] - 1
     print(chips)
-    print(isSolutionPossible())
+    print(isSolutionPossible(chips))
 
-def isSolutionPossible():
-    global labels, chips, outText
+def isSolutionPossible(localChips):
     possAll = True
-    for i in range(len(chips)):
-        if chips[i] != 0:
+    for i in range(len(localChips)):
+        if localChips[i] != 0:
             possThis = False
             num = i % 13
             checks = []
@@ -140,13 +141,13 @@ def isSolutionPossible():
                 checks.append([1,2])
 
             for check in checks:
-                if chips[check[0]+i] > 0 and chips[check[1]+i] > 0:
+                if localChips[check[0]+i] > 0 and localChips[check[1]+i] > 0:
                     possThis = True
 
             checks = [num, num + 13, num + 26, num + 39]
             count = 0
             for check in checks:
-                if(chips[check] > 0):
+                if(localChips[check] > 0):
                     count = count + 1
             if count > 2:
                 possThis = True
@@ -160,7 +161,7 @@ def isSolutionPossible():
 def updateSolution():
     global labels, chips, outText
     outText.delete('1.0', tk.END)
-    isPos = isSolutionPossible()
+    isPos = isSolutionPossible(chips)
     if(isPos):
         text = "Solution possible... now thinking"
     else:
