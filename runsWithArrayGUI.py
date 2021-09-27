@@ -109,11 +109,11 @@ def action(i):
     global labels, chips, outText
     chipsI = math.floor(i/2)
 
-    if(labels[i].cget('highlightbackground') == 'red'):
-        labels[i].configure(highlightbackground="green")
+    if(labels[i].cget('bg') == 'red'):
+        labels[i].configure(bg="green")
         chips[chipsI] = chips[chipsI] + 1
     else:
-        labels[i].configure(highlightbackground="red")
+        labels[i].configure(bg="red")
         chips[chipsI] = chips[chipsI] - 1
     print(chips)
     print(isSolutionPossible(chips))
@@ -200,20 +200,20 @@ for c in colors_text:
     for q in numbers_text:
         y = y + 1
 
-        temp = tk.Button(root, text = c+q, highlightbackground="red", command= partial(action,j))
+        temp = tk.Button(root, text = c+q, bg="red", command= partial(action,j))
         temp.place(relx = x * incx,
                    rely = y * incy,
                    anchor = 'center')
         labels.append(temp)
         j = j + 1
-        temp = tk.Button(root, text =c+q, highlightbackground="red",command= partial(action,j))
+        temp = tk.Button(root, text =c+q, bg="red",command= partial(action,j))
         temp.place(relx = x * incx + incx*0.5,
                    rely = y * incy,
                    anchor = 'center')
         labels.append(temp)
         j = j + 1
 
-temp = tk.Button(root, text ="Solve", highlightbackground="blue",command= partial(updateSolution))
+temp = tk.Button(root, text ="Solve", bg="blue",command= partial(updateSolution))
 temp.place(relx = 4 * incx + incx*0.5,
            rely = 14 * incy,
            anchor = 'center')

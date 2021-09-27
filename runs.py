@@ -57,6 +57,7 @@ def solve(tiles, runs):
     #print(len(tiles))
     if len(tiles) == 0:
         solutions.append(runs)
+        print(runs)
     for combo in all_combos:
         to_rem = []
         for tile in combo:
