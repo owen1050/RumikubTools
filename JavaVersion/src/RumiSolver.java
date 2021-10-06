@@ -3,12 +3,17 @@ import org.apache.commons.math3.util.CombinatoricsUtils;
 import java.util.*;
 
 public class RumiSolver {
+    int[][] allCombos;
+    Map<int[], Integer> longCombos;
 
-    public static void main(String[] args) {
+    public void main() {
+        this.allCombos = make_all_combos();
+        //this.longCombos = getLongMap();
+        //printSolution();
         runAll();
     }
 
-    public static int incArray(int[] arr, int max){
+    public  int incArray(int[] arr, int max){
         int x = arr.length - 1;
         while(arr[x] == max){
             arr[x] = 0;
@@ -18,46 +23,35 @@ public class RumiSolver {
         return x;
     }
 
-    public static void runAll(){
+    public void runAll(){
 
-        int[][] ddi = make_all_combos();
         int[] deck = new int [] {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 2, 2, 2, 0, 0, 1, 1, 1, 1, 1, 0, 0, 1, 2, 2, 1};
         for(int i = 0; i < 52; i++){
             deck[i] = 0;
         }
         List<int[]> hands = new ArrayList<>();
-
+        int count = 0;
         long now = System.currentTimeMillis();
         List<int[]> ans = null;
-        while(incArray(deck, 2) > 0){
-            ans = solve(hands, deck, ddi);
-
-            if(ans == null || ans.size() == 0){
-                //System.out.println("No solution");
-            } else {
-                for(int i = 0; i < 52; i++){
-                    System.out.print(deck[i]);
-                }
-                System.out.print(":");
-                for (int i = 0; i < ans.size(); i++) {
-                    for (int j = 1; j <= ans.get(i)[0]; j++) {
-                        System.out.print(ans.get(i)[j] + ":");
-                    }
-                    System.out.println("");
-                }
-            }
-        }
-
         long diff = System.currentTimeMillis()-now;
+        int lastDiff = 0;
+        while(incArray(deck, 2) > 0){
+            if((int)(diff /1000) != lastDiff){
+                lastDiff=(int)(diff/1000);
+                printDeck(deck);
+            }
+            diff = System.currentTimeMillis()-now;
+        }
+        diff = System.currentTimeMillis()-now;
+
         System.out.println("Time for 1 mil = "+diff);
     }
 
-    public static void printSolution(){
-        int[][] ddi = make_all_combos();
-        //int[] deck = new int [] {2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1};
-        int[] deck = new int [] {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 2, 2, 2, 0, 0, 1, 1, 1, 1, 1, 0, 0, 1, 2, 2, 1};
+    public void printSolution(){
+        int[] deck = new int [] {2, 2, 2, 0, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 1, 2, 2, 2,1,1,2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2};
+        //int[] deck = new int [] {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 0, 2, 2, 2, 0, 0, 1, 1, 1, 1, 1, 0, 0, 1, 2, 2, 1};
         for(int i = 0; i < 52; i++){
-            deck[i] = 0;
+            //deck[i] = 0;
         }
 
         List<int[]> hands = new ArrayList<>();
@@ -65,8 +59,7 @@ public class RumiSolver {
         long now = System.currentTimeMillis();
         List<int[]> ans = null;
         for(int i = 0; i < 1;i++){
-
-            ans = solve(hands, deck, ddi);
+            ans = solve(hands, deck);
         }
         long diff = System.currentTimeMillis()-now;
 
@@ -75,16 +68,16 @@ public class RumiSolver {
         } else {
             for (int i = 0; i < ans.size(); i++) {
                 for (int j = 1; j <= ans.get(i)[0]; j++) {
-                   // System.out.print(ans.get(i)[j] + ":");
+                   System.out.print(ans.get(i)[j] + ":");
                 }
-                //System.out.println("");
+                System.out.println("");
             }
         }
         System.out.println("Time for 1 mil = "+diff);
     }
 
-    public static int[][] make_all_combos() {
-        int[][] ret = new int[185][6];
+    public int[][] make_all_combos() {
+        int[][] ret = new int[329][14];
         int ix  = 0;
         int c;
         //straights first
@@ -92,7 +85,7 @@ public class RumiSolver {
             c = 13 * cT;
             for(int i = 0; i < 13; i++) {
                 for(int j = 0; j < 13; j++) {
-                    if(i + j < 13 && j >= 2 && j < 5) {
+                    if(i + j < 13 && j >= 2 && j < 13) {
                         ret[ix][0] = j + 1;
                         for(int k = 1; k <= j + 1; k++) {
                             ret[ix][k] = c + k + i - 1;
@@ -129,7 +122,7 @@ public class RumiSolver {
         return ret;
     }
 
-    public static boolean isHandInDeck(int[] combo, int[] deck){
+    public boolean isHandInDeck(int[] combo, int[] deck){
         int[] tempDeck = deck.clone();
         for(int i = 1; i < combo[0]; i++){
             if(tempDeck[combo[i]] > 0){
@@ -141,7 +134,7 @@ public class RumiSolver {
         return true;
     }
 
-    public static int[] removeHandReturnNewDeck(int[] combo, int[] deck){
+    public int[] removeHandReturnNewDeck(int[] combo, int[] deck){
         int[] tempDeck = deck.clone();
         for(int i = 1; i <= combo[0]; i++){
             if(tempDeck[combo[i]] > 0){
@@ -151,13 +144,13 @@ public class RumiSolver {
         return tempDeck;
     }
 
-    public static void printDeck(int[] deck){
+    public  void printDeck(int[] deck){
         for(int i = 0; i < deck.length; i++){
             System.out.print(":"+deck[i]);
         }
         System.out.println("");
     }
-    public static void printHands(List<int[]> hand){
+    public  void printHands(List<int[]> hand){
         for(int j =0; j<hand.size();j++) {
             for (int i = 0; i < hand.get(j).length; i++) {
                 System.out.print(":" + hand.get(j)[i]);
@@ -166,7 +159,7 @@ public class RumiSolver {
         }
     }
 
-    public static boolean isBoardPossible(int[] deck){
+    public  boolean isBoardPossible(int[] deck){
         boolean allPossible = true;
         boolean thisRunPoss = false;
         int num, count;
@@ -203,7 +196,7 @@ public class RumiSolver {
         return allPossible;
     }
 
-    public static List<int[]> solve(List<int[]> hands, int[] deck, int[][] allCombos){
+    public  List<int[]> solve(List<int[]> hands, int[] deck){
         boolean isEmpty = true;
         for(int i = 0; i < 52; i ++){
             if(deck[i] > 0){
@@ -218,15 +211,80 @@ public class RumiSolver {
             return null;
         }
         for(int i = 0; i < 185; i++){
-            if(isHandInDeck(allCombos[i], deck)){
+            if(isHandInDeck(this.allCombos[i], deck)){
                 List<int[]> newHand = new ArrayList<>(hands);
-                newHand.add(allCombos[i]);
-                List<int[]> ans = solve(newHand, removeHandReturnNewDeck(allCombos[i], deck), allCombos);
+                newHand.add(this.allCombos[i]);
+                List<int[]> ans = solve(newHand, removeHandReturnNewDeck(this.allCombos[i], deck));
                 if(ans != null){
                     return ans;
+                }
+                else
+                {
+                    for(int jk:deck){
+                        System.out.print(jk+":");
+                    }
+                    System.out.println("");
                 }
             }
         }
         return null;
+    }
+
+
+    public  Map<int[], Integer> getLongMap(){
+        int[][] ret = new int[329][14];
+        int ix  = 0;
+        int c;
+        //straights first
+        for(int cT = 0; cT < 4; cT++) {
+            c = 13 * cT;
+            for(int i = 0; i < 13; i++) {
+                for(int j = 0; j < 13; j++) {
+                    if(i + j < 13 && j >= 2 && j < 13) {
+                        ret[ix][0] = j + 1;
+                        for(int k = 1; k <= j + 1; k++) {
+                            ret[ix][k] = c + k + i - 1;
+                        }
+                        ix++;
+                    }
+                }
+            }
+        }
+
+        int[][] combs = new int[4][3];
+        Iterator<int[]> iterator = CombinatoricsUtils.combinationsIterator(4,3);
+        int i = 0;
+        while (iterator.hasNext()) {
+            final int[] combination = iterator.next();
+            combs[i] = combination;
+            i = i + 1;
+        }
+
+        for(i = 0; i < 13; i++) {
+            for(int j = 0; j < 4; j++){
+                ret[ix][0] = 3;
+                for(int k = 0; k < 3; k++) {
+                    ret[ix][k+1] = i + combs[j][k] * 13;
+                }
+                ix++;
+            }
+            ret[ix][0] = 4;
+            for(int k = 0; k < 4; k++) {
+                ret[ix][k+1] = k * 13 + i;
+            }
+            ix++;
+        }
+        Map<int[], Integer> allLongCombos = new HashMap<int[], Integer>();
+        int w = 0;
+        for(int[] hand: ret){
+            for(int q:hand){
+                System.out.print(":" + q);
+            }
+            System.out.println("---" +w );
+            w++;
+            allLongCombos.put(hand, 1);
+        }
+        return allLongCombos;
+
     }
 }
