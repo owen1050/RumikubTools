@@ -5,24 +5,60 @@ import java.util.*;
 public class RumiSolver {
 
     public static void main(String[] args) {
-        printSolution();
+        runAll();
     }
-//##TODO## remove all in make all combos which dont have all tiles in deck
-    public static void test(){
+
+    public static int incArray(int[] arr, int max){
+        int x = arr.length - 1;
+        while(arr[x] == max){
+            arr[x] = 0;
+            x--;
+        }
+        arr[x] = arr[x] + 1;
+        return x;
+    }
+
+    public static void runAll(){
+
         int[][] ddi = make_all_combos();
-        for (int i = 0; i < ddi.length; i++) {
-            for (int j = 0; j < ddi[i].length; j++) {
-                System.out.print(ddi[i][j] + ":");
+        int[] deck = new int [] {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 2, 2, 2, 0, 0, 1, 1, 1, 1, 1, 0, 0, 1, 2, 2, 1};
+        for(int i = 0; i < 52; i++){
+            deck[i] = 0;
+        }
+        List<int[]> hands = new ArrayList<>();
+
+        long now = System.currentTimeMillis();
+        List<int[]> ans = null;
+        while(incArray(deck, 2) > 0){
+            ans = solve(hands, deck, ddi);
+
+            if(ans == null || ans.size() == 0){
+                //System.out.println("No solution");
+            } else {
+                for(int i = 0; i < 52; i++){
+                    System.out.print(deck[i]);
+                }
+                System.out.print(":");
+                for (int i = 0; i < ans.size(); i++) {
+                    for (int j = 1; j <= ans.get(i)[0]; j++) {
+                        System.out.print(ans.get(i)[j] + ":");
+                    }
+                    System.out.println("");
+                }
             }
-            System.out.println("");
         }
 
+        long diff = System.currentTimeMillis()-now;
+        System.out.println("Time for 1 mil = "+diff);
     }
 
     public static void printSolution(){
         int[][] ddi = make_all_combos();
-        int[] deck = new int [] {2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1};
-        //15949 - int[] deck = new int [] {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 2, 2, 2, 0, 0, 1, 1, 1, 1, 1, 0, 0, 1, 2, 2, 1};
+        //int[] deck = new int [] {2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1};
+        int[] deck = new int [] {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 2, 2, 2, 0, 0, 1, 1, 1, 1, 1, 0, 0, 1, 2, 2, 1};
+        for(int i = 0; i < 52; i++){
+            deck[i] = 0;
+        }
 
         List<int[]> hands = new ArrayList<>();
 
@@ -39,9 +75,9 @@ public class RumiSolver {
         } else {
             for (int i = 0; i < ans.size(); i++) {
                 for (int j = 1; j <= ans.get(i)[0]; j++) {
-                    System.out.print(ans.get(i)[j] + ":");
+                   // System.out.print(ans.get(i)[j] + ":");
                 }
-                System.out.println("");
+                //System.out.println("");
             }
         }
         System.out.println("Time for 1 mil = "+diff);
